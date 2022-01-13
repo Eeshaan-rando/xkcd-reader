@@ -49,3 +49,6 @@ elif choice == 'R':
     for chunk in randomimgreq.iter_content(100000):
         img.write(chunk)
 img.close()
+
+# This line of shell does about the same thing:
+# wget $(curl https://xkcd.com 2> /dev/null | grep -i "hotlinking" | grep -Eo 'https:[/|a-z|A-Z|\.|_]+?png' | head -n 1) &> /dev/null
