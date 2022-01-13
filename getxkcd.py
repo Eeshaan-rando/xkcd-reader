@@ -1,39 +1,27 @@
-import requests, bs4 
+import requests, bs4
 
-#Use requests to download the main page to extract the URL of the image of the latest comic.
+#Download the main xkcd page
 req1 = requests.get('https://xkcd.com')
 req1.raise_for_status()
 
-#Generate bs4 object that can be parsed for HTML tags
+#Generate bs4 object
 xkcdsoup = bs4.BeautifulSoup(req1.text, 'html.parser')
 
-#Extract all the information within <meta ...> stuff
-urls = xkcdsoup.select('meta')
-
-title = ""
-imgurl = ""
-
-#Unpack the attributes dictionaries into a bunch of stuff that has the image url as an element
-urllist = []
+#Extract image URL and image file title
+imgurl = ''
+title = ''
+urls = xkcdsoup.select('#comic img')
 for i in urls:
-    for j in i.attrs:
-        urllist.append(str(i.attrs[j]))
+    imgurl += 'https:' + i['src']
+    for j in i['alt'].split(' '):
+        title += j
 
-#Get the image url and title from urllist 
-for i in urllist:
-    if "https://imgs.xkcd.com/comics/" in i:
-        imgurl += i
-m = imgurl[29:].split('_')
-m.remove('2x.png')
-for i in m:
-    title += i[0].upper() + i[1:]
-
-#Use requests to download the image from the image URL
+#Download image content from image URL
 req2 = requests.get(imgurl)
 req2.raise_for_status()
 
-#Create the image file and write the data to it
+#Write to image file
 img = open(title, 'wb')
-for chunk in req2.iter_content():
+for chunk in req2.iter_content(100000):
     img.write(chunk)
 img.close()
