@@ -1,4 +1,6 @@
 import requests, bs4
+import tkinter
+from PIL import ImageTk, Image
 
 #Download the main xkcd page
 req1 = requests.get('https://xkcd.com')
@@ -52,3 +54,31 @@ img.close()
 
 # This line of shell does about the same thing:
 # wget $(curl https://xkcd.com 2> /dev/null | grep -i "hotlinking" | grep -Eo 'https:[/|a-z|A-Z|\.|_]+?png' | head -n 1) &> /dev/null
+
+class FullScreenWin():
+    def __init__(self, master, **kwargs):
+        self.master=master
+        self._geom='200x200+0+0'
+        w = master.winfo_screenwidth()
+        h = master.winfo_screenheight()
+        master.geometry("{0}x{1}+0+0".format(w, h))
+        master.bind('<Escape>',self.toggle_geom)
+        
+        pilImg = Image.open(title)
+        pilImg = pilImg.resize((w, h), Image.ANTIALIAS)
+        image = ImageTk.PhotoImage(pilImg)
+        canvas = tkinter.Canvas(master, width=w, height=h)
+        canvas.pack()
+        canvas.create_image(w/2, h/2, image=image)
+        master.update_idletasks()
+        master.update()
+
+    def toggle_geom(self,event):
+        geom=self.master.winfo_geometry()
+        print(geom, self._geom)
+        self.master.geometry(self._geom)
+        self._geom=geom
+
+root=tkinter.Tk()
+app=FullScreenWin(root)
+root.mainloop()
