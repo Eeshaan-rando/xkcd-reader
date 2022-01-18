@@ -1,5 +1,6 @@
-from PIL import ImageTk, Image
-import requests, bs4, webbrowser, os, tkinter
+#from PIL import ImageTk, Image
+#import tkinter
+import requests, bs4, webbrowser, os
 
 #Download the main xkcd page
 req1 = requests.get('https://xkcd.com')
@@ -59,7 +60,7 @@ elif choice == 'R':
 
 # This line of shell does about the same thing:
 # wget $(curl https://xkcd.com 2> /dev/null | grep -i "hotlinking" | grep -Eo 'https:[/|a-z|A-Z|\.|_]+?png' | head -n 1) &> /dev/null
-
+"""
 class FullScreenWin():
     def __init__(self, master, **kwargs):
         self.master=master
@@ -87,3 +88,4 @@ class FullScreenWin():
 root=tkinter.Tk()
 app=FullScreenWin(root)
 root.mainloop()
+"""
