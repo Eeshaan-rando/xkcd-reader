@@ -1,6 +1,5 @@
-import requests, bs4
-import tkinter
 from PIL import ImageTk, Image
+import requests, bs4, webbrowser, os, tkinter
 
 #Download the main xkcd page
 req1 = requests.get('https://xkcd.com')
@@ -42,15 +41,21 @@ randomimgreq = requests.get(randomimgurl)
 randomimgreq.raise_for_status()
 
 choice = input('Latest/Random (L/R):')
+opencomic = input('Open comic once done downloading? (y/n):')
 if choice == 'L':
     img = open(title, 'wb')
     for chunk in req2.iter_content(100000):
         img.write(chunk)
+    if opencomic.lower() == 'y':
+        webbrowser.open(os.path.abspath(title))
+    img.close()
 elif choice == 'R':
     img = open(randomtitle, 'wb')
     for chunk in randomimgreq.iter_content(100000):
         img.write(chunk)
-img.close()
+    if opencomic.lower() == 'y':
+        webbrowser.open(os.path.abspath(randomtitle))
+    img.close()
 
 # This line of shell does about the same thing:
 # wget $(curl https://xkcd.com 2> /dev/null | grep -i "hotlinking" | grep -Eo 'https:[/|a-z|A-Z|\.|_]+?png' | head -n 1) &> /dev/null
